@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class PaymentServiceTest {
 
@@ -51,6 +52,7 @@ class PaymentServiceTest {
 
 	@Test
 	void processOnlinePayment() {
+		when(paymentClient.isPaymentValid(any())).thenReturn(true);
 		paymentService.processOnlinePayment(payment);
 		verify(paymentRepository).save(any());
 		verify(accountRepository).save(any());
