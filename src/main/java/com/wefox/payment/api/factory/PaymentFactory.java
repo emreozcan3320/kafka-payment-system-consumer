@@ -1,9 +1,11 @@
 package com.wefox.payment.api.factory;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.wefox.payment.api.enumeration.PaymentType;
 import com.wefox.payment.api.exception.PaymentAccountNotFoundException;
 import com.wefox.payment.api.exception.PaymentCreationException;
 import com.wefox.payment.api.exception.PaymentEmptyJsonValueException;
+import com.wefox.payment.api.exception.PaymentIllegalPaymentTypeException;
 import com.wefox.payment.api.exception.PaymentMissingJsonKeyException;
 import com.wefox.payment.api.model.Account;
 import com.wefox.payment.api.model.Payment;
@@ -46,12 +48,12 @@ public class PaymentFactory {
 		}
 	}
 
-	private Payment getPaymentFromJsonNode(JsonNode jsonNode) throws PaymentAccountNotFoundException {
+	private Payment getPaymentFromJsonNode(JsonNode jsonNode) throws PaymentAccountNotFoundException, PaymentIllegalPaymentTypeException {
 		Account account = findAccountByAccountIdFromPaymentJson(jsonNode.get("account_id").asText());
 		return Payment
 				.builder()
 				.paymentId(jsonNode.get("payment_id").asText())
-				.paymentType(jsonNode.get("payment_type").asText())
+				.paymentType(PaymentType.get(jsonNode.get("payment_type").asText()))
 				.creditCard(jsonNode.get("credit_card").asText())
 				.amount(new BigDecimal(jsonNode.get("amount").asText()))
 				.account(account)
