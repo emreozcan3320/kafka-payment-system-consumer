@@ -8,6 +8,9 @@ custom:
           name: offline
         online:
           name: online
+  url:
+    validation: http://localhost:9000/payment
+    log: http://localhost:9000/log
 
 server:
   port: 5000
@@ -16,6 +19,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: true
   datasource:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/payments

@@ -1,6 +1,5 @@
 package com.wefox.payment.api.model;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,9 +28,13 @@ public class Account {
 
 	private Date birthdate;
 
-	@Builder.Default
-	private Timestamp lastPaymentDate = new Timestamp(System.currentTimeMillis());
+	/*
+	 * @UpdateTimestamp,@PrePersist or @Builder.DEFAULT doesnt work
+	 * I cant find the reason so I have to set manually
+	 * */
+	private Timestamp lastPaymentDate;
 
 	@CreationTimestamp
 	private Timestamp createdOn;
+
 }
