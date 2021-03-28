@@ -8,10 +8,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class Consumer {
-	private static final Logger logger = LoggerFactory.getLogger(Consumer.class);
+	private final Logger logger = LoggerFactory.getLogger(Consumer.class);
 
-	@KafkaListener(topics = "online")
-	public void consume(Payment payment) {
+	@KafkaListener(topics = "${custom.kafka.consumer.topic.offline.name}")
+	public void consumeOfflinePayment(Payment payment) {
+		logger.info(String.format("** Consumer received the offline payment -> %s **", payment));
+	}
+
+	@KafkaListener(topics = "${custom.kafka.consumer.topic.online.name}")
+	public void consumeOnlinePayment(Payment payment) {
 		logger.info(String.format("** Consumer received the online payment -> %s **", payment));
 	}
+
+
 }

@@ -3,6 +3,11 @@ custom:
     consumer:
       bootstrap-servers: localhost:29092
       group-id: group_id
+      topic:
+        offline:
+          name: offline
+        online:
+          name: online
 
 server:
   port: 5000

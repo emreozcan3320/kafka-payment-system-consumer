@@ -26,11 +26,6 @@ public class KafkaConfiguration {
 
 	private final Environment environment;
 
-	private String getProperty(String propertyKey) {
-		return Optional.ofNullable(environment.getProperty(propertyKey))
-				.orElseThrow(() -> new IllegalStateException(propertyKey + " is missing"));
-	}
-
 	@Bean
 	public ConsumerFactory<String, String> consumerFactory() {
 		Map<String, Object> props = new HashMap<>();
@@ -47,5 +42,10 @@ public class KafkaConfiguration {
 		ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
+	}
+
+	private String getProperty(String propertyKey) {
+		return Optional.ofNullable(environment.getProperty(propertyKey))
+				.orElseThrow(() -> new IllegalStateException(propertyKey + " is missing"));
 	}
 }
