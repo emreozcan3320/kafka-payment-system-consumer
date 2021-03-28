@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <param name="Encoding" value="UTF-8"/>
+        <!--    should be an env variable in production    -->
+        <remoteHost>localhost</remoteHost>
+        <!--    should be an env variable in production    -->
+        <port>5000</port>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"payment_id":"paymentId", "error_type": "errorType", "error_description":"errorDescription"}</customFields>
+        </encoder>
+    </appender>
+    <root level="ERROR">
+        <appender-ref ref="logstash"/>
+    </root>
+</configuration>
