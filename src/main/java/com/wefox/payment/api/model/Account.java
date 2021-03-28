@@ -1,6 +1,8 @@
 package com.wefox.payment.api.model;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -16,6 +18,8 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
 @Entity
 @Table(name = "ACCOUNTS")
 public class Account {

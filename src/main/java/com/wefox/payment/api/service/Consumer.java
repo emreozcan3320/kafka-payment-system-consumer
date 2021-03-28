@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wefox.payment.api.exception.PaymentIllegalJsonFormatException;
+import com.wefox.payment.api.factory.PaymentFactory;
+import com.wefox.payment.api.model.Payment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -13,17 +15,20 @@ import org.springframework.stereotype.Service;
 public class Consumer {
 
 	private final PaymentService paymentService;
+	private final PaymentFactory paymentFactory;
 
 	@KafkaListener(topics = "${custom.kafka.consumer.topic.offline.name}")
 	public void consumeOfflinePayment(String paymentJson) {
 		JsonNode paymentJsonNode = getJsonNodeFromJson(paymentJson);
-		paymentService.processOfflinePayment(paymentJsonNode);
+		Payment payment = paymentFactory.getInstanceFromOfflinePayment(paymentJsonNode);
+		paymentService.processOfflinePayment(payment);
 	}
 
 	@KafkaListener(topics = "${custom.kafka.consumer.topic.online.name}")
 	public void consumeOnlinePayment(String paymentJson) {
 		JsonNode paymentJsonNode = getJsonNodeFromJson(paymentJson);
-		paymentService.processOnlinePayment(paymentJsonNode);
+		Payment payment = paymentFactory.getInstanceFromOnlinePayment(paymentJsonNode);
+		paymentService.processOnlinePayment(payment);
 	}
 
 	private JsonNode getJsonNodeFromJson(String paymentJson) {

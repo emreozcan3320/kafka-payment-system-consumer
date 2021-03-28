@@ -1,10 +1,8 @@
 package com.wefox.payment.api.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.wefox.payment.api.client.PaymentClient;
 import com.wefox.payment.api.exception.DataBaseOperationException;
 import com.wefox.payment.api.exception.InvalidPaymentException;
-import com.wefox.payment.api.factory.PaymentFactory;
 import com.wefox.payment.api.model.Account;
 import com.wefox.payment.api.model.Payment;
 import com.wefox.payment.api.repository.AccountRepository;
@@ -20,15 +18,13 @@ import java.sql.Timestamp;
 @RequiredArgsConstructor
 public class PaymentService {
 
-	private final PaymentFactory paymentFactory;
 	private final PaymentRepository paymentRepository;
 	private final AccountRepository accountRepository;
 	private final PaymentClient paymentClient;
 	private final PaymentErrorLogger errorLogger;
 
 	@Transactional
-	public void processOfflinePayment(JsonNode paymentJsonNode) {
-		Payment payment = paymentFactory.getInstanceFromOfflinePayment(paymentJsonNode);
+	public void processOfflinePayment(Payment payment) {
 		try {
 			paymentRepository.save(payment);
 			accountRepository.save(getUpdatedAccount(payment.getAccount()));
@@ -38,8 +34,7 @@ public class PaymentService {
 	}
 
 	@Transactional
-	public void processOnlinePayment(JsonNode paymentJsonNode) {
-		Payment payment = paymentFactory.getInstanceFromOnlinePayment(paymentJsonNode);
+	public void processOnlinePayment(Payment payment) {
 		if(paymentClient.isPaymentValid(payment)) {
 			try {
 				paymentRepository.save(payment);
