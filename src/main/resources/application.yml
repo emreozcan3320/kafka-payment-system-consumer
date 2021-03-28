@@ -1,3 +1,9 @@
+custom:
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:29092
+      group-id: group_id
+
 server:
   port: 5000
 
