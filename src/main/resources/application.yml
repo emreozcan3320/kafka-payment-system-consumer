@@ -1,0 +1,12 @@
+server:
+  port: 5000
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/payments
+    username: tech
+    password: test
