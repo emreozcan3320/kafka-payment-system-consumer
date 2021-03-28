@@ -13,14 +13,14 @@ import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
-abstract public class ClientAdapter {
+public abstract class ClientAdapter {
 
 	private final RestTemplate restTemplate;
 
 	private <T> HttpEntity<T> generateHttpEntity(T data) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-		return new HttpEntity<T>(data, httpHeaders);
+		return new HttpEntity<>(data, httpHeaders);
 	}
 
 	protected <T> T get(String fullUrl, Class<T> model) throws HttpStatusCodeException {

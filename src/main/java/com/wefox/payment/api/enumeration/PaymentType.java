@@ -27,7 +27,7 @@ public enum PaymentType {
 	 * decrease time complexity O(1) constant time.
 	 * */
 	static {
-		Map<String, PaymentType> map = new ConcurrentHashMap<String, PaymentType>();
+		Map<String, PaymentType> map = new ConcurrentHashMap<>();
 		for(PaymentType instance : PaymentType.values()) {
 			map.put(instance.getName().toLowerCase(), instance);
 		}
