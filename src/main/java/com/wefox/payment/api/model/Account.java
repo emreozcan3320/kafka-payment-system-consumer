@@ -1,5 +1,6 @@
 package com.wefox.payment.api.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,9 +29,9 @@ public class Account {
 
 	private Date birthdate;
 
-	private Timestamp lastPaymentDate;
+	@Builder.Default
+	private Timestamp lastPaymentDate = new Timestamp(System.currentTimeMillis());
 
 	@CreationTimestamp
 	private Timestamp createdOn;
 }
-

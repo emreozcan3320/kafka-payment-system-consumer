@@ -31,8 +31,6 @@ public class KafkaConfiguration {
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, getProperty("custom.kafka.consumer.group-id"));
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-//		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-//		props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, Payment.class);
 		return new DefaultKafkaConsumerFactory<>(props);
 	}
 

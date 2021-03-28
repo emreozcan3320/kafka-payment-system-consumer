@@ -1,5 +1,6 @@
 package com.wefox.payment.api.service;
 
+import com.wefox.payment.api.exception.DataBaseOperationException;
 import com.wefox.payment.api.exception.PaymentAccountNotFoundException;
 import com.wefox.payment.api.exception.PaymentEmptyJsonValueException;
 import com.wefox.payment.api.exception.PaymentIllegalJsonFormatException;
@@ -17,9 +18,22 @@ public class Consumer {
 
 	private final PaymentService paymentService;
 
+
 	@KafkaListener(topics = "${custom.kafka.consumer.topic.offline.name}")
-	public void consumeOfflinePayment(String paymentJson) throws PaymentMissingJsonKeyException, PaymentIllegalJsonFormatException, PaymentAccountNotFoundException, PaymentEmptyJsonValueException {
-		paymentService.processOfflinePayment(paymentJson);
+	public void consumeOfflinePayment(String paymentJson) {
+		try {
+			paymentService.processOfflinePayment(paymentJson);
+		} catch(PaymentMissingJsonKeyException e) {
+			e.printStackTrace();
+		} catch(PaymentIllegalJsonFormatException e) {
+			e.printStackTrace();
+		} catch(PaymentAccountNotFoundException e) {
+			e.printStackTrace();
+		} catch(PaymentEmptyJsonValueException e) {
+			e.printStackTrace();
+		} catch(DataBaseOperationException e) {
+			e.printStackTrace();
+		}
 	}
 
 //
