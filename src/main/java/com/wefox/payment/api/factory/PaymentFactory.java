@@ -1,15 +1,14 @@
 package com.wefox.payment.api.factory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wefox.payment.api.exception.PaymentAccountNotFoundException;
+import com.wefox.payment.api.exception.PaymentCreationException;
 import com.wefox.payment.api.exception.PaymentEmptyJsonValueException;
-import com.wefox.payment.api.exception.PaymentIllegalJsonFormatException;
 import com.wefox.payment.api.exception.PaymentMissingJsonKeyException;
 import com.wefox.payment.api.model.Account;
 import com.wefox.payment.api.model.Payment;
 import com.wefox.payment.api.repository.AccountRepository;
+import com.wefox.payment.api.util.PaymentErrorLogger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -25,30 +24,25 @@ public class PaymentFactory {
 	private final AccountRepository accountRepository;
 	private final List<String> required_offline_payment_keys = Arrays.asList("payment_id", "account_id", "payment_type", "amount");
 	private final List<String> required_online_payment_keys = Arrays.asList("payment_id", "account_id", "payment_type", "credit_card", "amount");
+	private final PaymentErrorLogger errorLogger;
 
-	public Payment getInstanceFromOfflinePayment(String paymentJson) throws PaymentIllegalJsonFormatException, PaymentEmptyJsonValueException, PaymentMissingJsonKeyException, PaymentAccountNotFoundException {
-		JsonNode jsonNode = getJsonNodeFromJson(paymentJson);
-		validatePaymentJson(jsonNode, required_offline_payment_keys);
-		return getPaymentFromJsonNode(jsonNode);
-	}
-
-	public Payment getInstanceFromOnlinePayment(String paymentJson) throws PaymentIllegalJsonFormatException, PaymentEmptyJsonValueException, PaymentMissingJsonKeyException, PaymentAccountNotFoundException {
-		JsonNode jsonNode = getJsonNodeFromJson(paymentJson);
-		validatePaymentJson(jsonNode, required_online_payment_keys);
-		return getPaymentFromJsonNode(jsonNode);
-	}
-
-	private JsonNode getJsonNodeFromJson(String paymentJson) throws PaymentIllegalJsonFormatException {
+	public Payment getInstanceFromOfflinePayment(JsonNode paymentJsonNode) {
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readTree(paymentJson);
-		} catch(JsonProcessingException e) {
-			throw new PaymentIllegalJsonFormatException(
-					"Json input" + paymentJson + " format doesn't match " +
-							"{\"payment_id\": \"[payment_id]\", \"account_id\": [account_id], \"payment_type\": \"[payment_type]\"," +
-							" \"credit_card\": \"[credit_card]\", \"amount\": [amount], \"delay\": [delay]}"
-					, e
-			);
+			validatePaymentJson(paymentJsonNode, required_offline_payment_keys);
+			return getPaymentFromJsonNode(paymentJsonNode);
+		} catch(Exception e) {
+			errorLogger.log(paymentJsonNode.get("payment_id").asText(), e.getMessage(), e);
+			throw new PaymentCreationException("Payment instance can not created", e);
+		}
+	}
+
+	public Payment getInstanceFromOnlinePayment(JsonNode paymentJsonNode) {
+		try {
+			validatePaymentJson(paymentJsonNode, required_online_payment_keys);
+			return getPaymentFromJsonNode(paymentJsonNode);
+		} catch(Exception e) {
+			errorLogger.log(paymentJsonNode.get("payment_id").asText(), e.getMessage(), e);
+			throw new PaymentCreationException("Payment instance can not created", e);
 		}
 	}
 

@@ -33,7 +33,7 @@ abstract public class ClientAdapter {
 
 	protected <T> T post(String fullUrl, Class<T> model, T data) throws HttpStatusCodeException {
 		try {
-			return restTemplate.exchange(fullUrl, HttpMethod.POST, generateHttpEntity(data), model).getBody();
+			return restTemplate.postForEntity(fullUrl, generateHttpEntity(data), model).getBody();
 		} catch(HttpStatusCodeException e) {
 			throw e;
 		}
