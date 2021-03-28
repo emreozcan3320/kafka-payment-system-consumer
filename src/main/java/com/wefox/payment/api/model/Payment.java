@@ -1,43 +1,59 @@
 package com.wefox.payment.api.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "PAYMENTS")
 public class Payment {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@JsonProperty("payment_id")
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String paymentId;
 
-	@JsonProperty("account_id")
-	private Integer accountId;
-
 	@Column(nullable = false)
-	@JsonProperty("payment_type")
 	private String paymentType;
 
 	@Column(nullable = false)
-	@JsonProperty("credit_card")
 	private String creditCard;
 
 	@Column(nullable = false)
-	@JsonProperty("amount")
 	private BigDecimal amount;
 
 	@UpdateTimestamp
+	@Setter(AccessLevel.NONE)
 	private Timestamp createdOn;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "account_id", nullable = false)
+	private Account account;
+
+	@Builder
+	public Payment(String paymentId, String paymentType, String creditCard, BigDecimal amount, Account account) {
+		this.paymentId = paymentId;
+		this.paymentType = paymentType;
+		this.creditCard = creditCard;
+		this.amount = amount;
+		this.account = account;
+	}
 }
 

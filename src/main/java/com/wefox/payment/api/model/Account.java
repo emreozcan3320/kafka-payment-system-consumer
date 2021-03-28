@@ -1,6 +1,7 @@
 package com.wefox.payment.api.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
@@ -13,20 +14,23 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "ACCOUNTS")
 public class Account {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long accountId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer accountId;
+
 	@Column(nullable = false)
 	private String email;
+
 	private Date birthdate;
+
 	private Timestamp lastPaymentDate;
+
 	@CreationTimestamp
 	private Timestamp createdOn;
-
-
 }
 
