@@ -57,30 +57,30 @@ The application has a pretty classic Spring Boot folder structure.
 				+---service
 				+---ApiAplicationTests.java
 ```
-#### Configuration
+#### :red_circle: Configuration
 Spring Beans can be very powerful. I used Spring beans to configure my application.
 
-#### Config
+#### :red_circle: Config
 Spring looks for application configurations at certain locations. I created a config folder and put the application.yaml inside it. With this, we don't need to build our application every time a configuration changes. Also, it can be helpful in cloud environments and distributed systems.
 
-#### Client
+#### :red_circle: Client
 Contain an abstract class that has simple restTemplate implementation other client class extends from this abstract class.
 
-#### Log
+#### :red_circle: Log
 Normally I preferred to use Logstash but due to project requirements and environment, I created PaymentErrorLogger. I used the static log method of PaymentErrorLogger for the entire project. But It is not the correct approach and should use in a Cloud environment.
 
-#### Persistent
+#### :red_circle: Persistent
 I used spring-boot-starter-data-jpa, which contains Spring Data JPA and Hibernate Core. Spring Data Jpa has very useful production level futures.
 
 I also used @Transactional so if something went wrong payment saving process or Account info update, operations are rolling back.
 
-#### Serialize and Deserialize Java Object
+#### :red_circle: Serialize and Deserialize Java Object
 Jackson is used at spring boots as default. I leveraged its annotations to serialize models.
 
-#### Lombok
+#### :red_circle: Lombok
 Lombok also used at the project
 
-#### Testing
+#### :red_circle: Testing
 jUnit5 and Mochito used to demostrate simple tests. But I don't enough time to write all the required tests.
 
 > ***Note:** If you check the comments on the project there are some explanations why I use that approach. Like error, time complexity,
